@@ -279,8 +279,7 @@ Touching sync or entity_changes?
 ## Memory
 
 Project context and conventions live in `AGENTS.md` at the repo root.
-For AllCodex-specific details, see `allcodex-core/CLAUDE.md`.
-Do not duplicate these into separate memory files.
+If you have memory tools available at your disposal you can use them to remember any relevant information from these files, but do not duplicate them into separate memory files.
 
 ---
 
