@@ -45,7 +45,7 @@ bun build
 
 ## Architecture at a Glance
 
-See [docs/shared/architecture.md](docs/shared/architecture.md) for full details. Key concepts:
+See [docs/shared/reference/architecture.md](docs/shared/reference/architecture.md) for full details. Key concepts:
 
 - **Everything is a note** in AllCodex. Notes have types, content, attributes (labels/relations), and live in a multi-parent tree via branches.
 - **Becca** = backend entity cache (all notes in memory). **Shaca** = read-only share cache.
@@ -81,13 +81,13 @@ See [docs/shared/architecture.md](docs/shared/architecture.md) for full details.
 ### allcodex-portal
 - Next.js App Router with React 19 and React Compiler enabled
 - TanStack Query for server state (`useQuery` / `useMutation` + invalidation)
-- Component state with `useState` — no global store in active use
+- Component state with `useState` — **Zustand** for dedicated stores (`useBrainDumpStore`, `useAIToolsStore`)
 - Tailwind CSS 4 with shadcn/ui (new-york style, neutral base, CSS variables)
 - `components/ui/` = generic shadcn primitives, `components/portal/` = app-specific
 - `lib/` = server-only integration code (never import in client components)
 - API routes are thin proxies — no domain logic in the portal
 - Dark "grimoire" theme is hardcoded (Cinzel headings, Crimson Text body)
-- **Known issue**: `dangerouslySetInnerHTML` used without sanitization in lore detail view — sanitize when touching this code
+- **Resolved**: `dangerouslySetInnerHTML` is now wrapped with `sanitizeLoreHtml()` (DOMPurify) in the lore detail view via `lib/sanitize.ts`. Player-safe preview uses `sanitizePlayerView()`.
 - `@/*` path alias for imports
 
 ## Key Files
@@ -105,19 +105,31 @@ See [docs/shared/architecture.md](docs/shared/architecture.md) for full details.
 | Brain dump pipeline | `allknower/src/pipeline/brain-dump.ts` |
 | RAG embedder | `allknower/src/rag/embedder.ts` |
 | ETAPI client | `allknower/src/etapi/client.ts` |
-| Lore type schemas | `allknower/src/types/lore.ts` |
+| Lore type schemas | `allknower/src/types/lore.ts` (21 entity types) |
+| System pack import | `allknower/src/routes/import.ts` |
 | Prisma schema | `allknower/prisma/schema.prisma` |
 | Portal layout | `allcodex-portal/app/(portal)/layout.tsx` |
 | Backend proxy lib | `allcodex-portal/lib/etapi-server.ts`, `lib/allknower-server.ts` |
 | Credential resolver | `allcodex-portal/lib/get-creds.ts` |
+| HTML sanitizer | `allcodex-portal/lib/sanitize.ts` |
+| Zustand stores | `allcodex-portal/lib/stores/brain-dump-store.ts`, `lib/stores/ai-tools-store.ts` |
+| Share settings component | `allcodex-portal/components/portal/ShareSettings.tsx` |
+| Statblock card component | `allcodex-portal/components/portal/StatblockCard.tsx` |
+| Canonical lore schema | `docs/shared/reference/canonical-lore-schema.md` |
 
 ## Existing Documentation
 
+- [docs/shared/README.md](docs/shared/README.md) — **documentation index** (start here)
+- [docs/shared/reference/architecture.md](docs/shared/reference/architecture.md) — ecosystem architecture (submodule across repos)
+- [docs/shared/planning/ROADMAP.md](docs/shared/planning/ROADMAP.md) — canonical DM-first roadmap (Phases 0–4 shipped, Phase 5 partial)
+- [docs/shared/planning/implementation_plan_phases_0_3.md](docs/shared/planning/implementation_plan_phases_0_3.md) — detailed implementation plan (all phases A–G complete)
+- [docs/shared/reference/canonical-lore-schema.md](docs/shared/reference/canonical-lore-schema.md) — 21 lore entity types (single source of truth)
+- [docs/shared/analysis/gap_analysis_vs_worldanvil.md](docs/shared/analysis/gap_analysis_vs_worldanvil.md) — feature gap analysis vs World Anvil
+- [docs/shared/analysis/worldanvil_feature_matrix.md](docs/shared/analysis/worldanvil_feature_matrix.md) — implementation-verified feature matrix
+- [docs/shared/reference/portal-api-reference.md](docs/shared/reference/portal-api-reference.md) — complete Portal API route reference (45 routes)
 - [allcodex-core/CLAUDE.md](allcodex-core/CLAUDE.md) — detailed AllCodex agent guide
-- [docs/shared/architecture.md](docs/shared/architecture.md) — ecosystem architecture (symlinked across repos)
 - [allcodex-core/docs/Developer Guide/](allcodex-core/docs/Developer%20Guide/) — upstream Trilium dev guide (partially stale for this fork)
 - [allknower/docs/ai_architecture_investigation.md](allknower/docs/ai_architecture_investigation.md) — AI/RAG improvement backlog
-- [allknower/docs/implementation_plan.md](allknower/docs/implementation_plan.md) — implementation roadmap
 - [allcodex-portal/ROADMAP.md](allcodex-portal/ROADMAP.md) — portal feature backlog
 
 ## Common Pitfalls
@@ -129,4 +141,4 @@ See [docs/shared/architecture.md](docs/shared/architecture.md) for full details.
 5. **Brain dump overwrites**: AllKnower's brain-dump pipeline replaces note content wholesale — no merge/diff.
 6. **Docs drift**: some README endpoints, shared docs model references, and test expectations are stale vs. current code.
 7. **No portal tests**: allcodex-portal has no test suite yet.
-8. **HTML in portal**: lore detail view renders unsanitized HTML. Always sanitize if modifying this flow.
+8. **HTML in portal**: lore detail view HTML is sanitized via `sanitizeLoreHtml()` (DOMPurify). Player-safe previews use `sanitizePlayerView()`. Keep this pattern when adding new HTML rendering paths.
