@@ -1,19 +1,19 @@
 [submodule "allcodex-core"]
 	path = allcodex-core
 	url = git@github.com:ThunderRonin/allcodex-core.git
-	branch = main
+	branch = dev
 
 [submodule "allknower"]
 	path = allknower
 	url = git@github.com:ThunderRonin/allknower.git
-	branch = main
+	branch = dev
 
 [submodule "allcodex-portal"]
 	path = allcodex-portal
 	url = git@github.com:ThunderRonin/allcodex-portal.git
-	branch = main
+	branch = dev
 
 [submodule "docs/shared"]
 	path = docs/shared
 	url = git@github.com:ThunderRonin/allcodex-docs.git
-	branch = main
+	branch = dev
