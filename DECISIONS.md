@@ -50,6 +50,11 @@ AllKnower serves no login HTML. better-auth is configured in headless mode — t
 **Why:** Separates concerns cleanly. AllKnower is a pure API server. The Portal is the UI surface. Login flows, error messages, and form validation all live in one place.
 **Trade-off:** AllKnower's auth endpoints are not browsable without the Portal running.
 
+## AllKnower tests run in per-directory bun invocations
+`bun test` in a single invocation shares a global module registry. `mock.module()` calls in one test file permanently shadow the real module for all files loaded later in the same process, causing false failures in unrelated tests.
+**Why:** Bun's test runner processes all files in one V8 context by default. A route test that mocks `etapi/client.ts` leaves that mock active when the next alphabetical file imports the same module — even if the second file has its own `mock.module()` call, ESM static imports are hoisted above `mock.module()` and resolve from the already-contaminated registry.
+**Trade-off:** Each `bun test <dir>` call spawns a fresh process, so total wall-clock time is slightly higher. Suite isolation is worth it — combining directories causes intermittent, order-dependent failures that are hard to diagnose.
+
 ## Next.js App Router with React Compiler
 The Portal uses the Next.js App Router (not Pages Router) with React 19 and the experimental React Compiler enabled.
 **Why:** App Router enables React Server Components for data-fetching layouts. React Compiler automates memoization — no manual `useMemo`/`useCallback` discipline required.
