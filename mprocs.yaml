@@ -1,0 +1,7 @@
+procs:
+  core:
+    shell: "cd allcodex-core && pnpm server:start"
+  knower:
+    shell: "echo 'Waiting for Core (8080) to initialize...'; while ! curl -s http://127.0.0.1:8080 >/dev/null; do sleep 1; done; echo 'Core is up! Starting Knower...'; cd allknower && bun dev"
+  portal:
+    shell: "echo 'Waiting for Knower (3001) to initialize...'; while ! curl -s http://127.0.0.1:3001 >/dev/null; do sleep 1; done; echo 'Knower is up! Starting Portal...'; cd allcodex-portal && bun dev"
