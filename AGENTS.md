@@ -126,7 +126,7 @@ See [docs/shared/reference/architecture.md](docs/shared/reference/architecture.m
 - [docs/shared/reference/canonical-lore-schema.md](docs/shared/reference/canonical-lore-schema.md) — 21 lore entity types (single source of truth)
 - [docs/shared/analysis/gap_analysis_vs_worldanvil.md](docs/shared/analysis/gap_analysis_vs_worldanvil.md) — feature gap analysis vs World Anvil
 - [docs/shared/analysis/worldanvil_feature_matrix.md](docs/shared/analysis/worldanvil_feature_matrix.md) — implementation-verified feature matrix
-- [docs/shared/reference/portal-api-reference.md](docs/shared/reference/portal-api-reference.md) — complete Portal API route reference (45 routes)
+- [docs/shared/reference/portal-api-reference.md](docs/shared/reference/portal-api-reference.md) — complete Portal API route and method reference
 - [allcodex-core/CLAUDE.md](allcodex-core/CLAUDE.md) — detailed AllCodex agent guide
 - [allcodex-core/docs/Developer Guide/](allcodex-core/docs/Developer%20Guide/) — upstream Trilium dev guide (partially stale for this fork)
 - [allknower/docs/ai_architecture_investigation.md](allknower/docs/ai_architecture_investigation.md) — AI/RAG improvement backlog
@@ -140,5 +140,5 @@ See [docs/shared/reference/architecture.md](docs/shared/reference/architecture.m
 4. **ESLint ignores `packages/*`**: root lint config doesn't cover all package folders.
 5. **Brain dump overwrites**: AllKnower's brain-dump pipeline replaces note content wholesale — no merge/diff.
 6. **Docs drift**: some README endpoints, shared docs model references, and test expectations are stale vs. current code.
-7. **No portal tests**: allcodex-portal has no test suite yet.
+7. **Portal tests are split**: `allcodex-portal` has Vitest unit tests and Playwright E2E specs. `bun run check` runs typecheck + unit tests and intentionally excludes Playwright, which needs the full stack running.
 8. **HTML in portal**: lore detail view HTML is sanitized via `sanitizeLoreHtml()` (DOMPurify). Player-safe previews use `sanitizePlayerView()`. Keep this pattern when adding new HTML rendering paths.
