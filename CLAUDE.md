@@ -95,9 +95,9 @@ User → Portal (:3000) → AllKnower (:3001) → AllCodex Core (:8080, via ETAP
 
 ### allcodex-portal
 - Next.js App Router + React Compiler; `@/*` path alias
-- TanStack Query for server state; Zustand (`useBrainDumpStore`, `useAIToolsStore`) for shared UI state
+- TanStack Query for server state; Zustand (`useBrainDumpStore`, `useAIToolsStore`, `useCopilotStore`) for shared UI state
 - `lib/` is server-only — never import from client components
-- Dark "grimoire" theme is hardcoded (Cinzel headings, Crimson Text body)
+- Theme supports light (parchment) and dark (grimoire) via `next-themes` — `ThemeProvider` in `components/providers.tsx`; `.dark` class activates the dark token block in `globals.css`
 - All raw HTML rendering in React must be sanitized via `sanitizeLoreHtml()` from `lib/sanitize.ts` (DOMPurify) — player-safe previews use `sanitizePlayerView()`
 
 ## Common Pitfalls
@@ -113,3 +113,7 @@ User → Portal (:3000) → AllKnower (:3001) → AllCodex Core (:8080, via ETAP
 9. **Portal Zod schemas must match AllKnower source**: when writing or updating `allknower-schemas.ts`, cross-reference `allknower/src/pipeline/schemas/response-schemas.ts` — mismatches cause false 502s at runtime.
 10. **Elysia listen race**: always `await app.listen(PORT)` before accessing `app.server` — synchronous `app.listen()` leaves `app.server` null when the URL is built.
 11. **Bun module cache contamination**: `bun test` in a single invocation shares one module registry across all test files. A `mock.module()` in file A permanently shadows the real module for file B loaded later — even if B has its own `mock.module()`. Always run AllKnower tests as separate per-directory invocations (`bun test test/`, `bun test src/etapi/`, etc.). See `package.json` `test` script for the canonical groups.
+12. **Brain dump E2E fixtures need unique runtime IDs**: AllKnower's dedup logic treats content matching existing lore as an update attempt, not a new note. Embed `Date.now()` in both the entity name and body so each test run produces a genuinely novel entity.
+13. **`autoRelate` latency scales with entity count**: `suggestRelationsForNote` runs once per created note (~30-40s each). A 3-entity fixture triggers 3 sequential LLM calls; keep integration test brain-dump fixtures to 1 entity to stay under timeout ceilings.
+14. **AllKnower `.env.test` requires server restart**: env vars load once at startup — `/health` returning 200 does not mean the new env is active. After editing `.env.test`, kill the watcher and restart with `bun --env-file=.env.test dev`.
+15. **LLM JSON schema `required` array prevents silent no-ops**: fallback models (e.g. `x-ai/grok-4.1-fast`) silently omit fields absent from `required` even if present in `properties`. Always include all expected output fields in `required`.
