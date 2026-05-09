@@ -16,4 +16,6 @@ if ! command -v mprocs &> /dev/null; then
 fi
 
 echo "Spinning up the AllCodex dev ecosystem with mprocs..."
+SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
+cd "$SCRIPT_DIR/.." || exit 1
 mprocs

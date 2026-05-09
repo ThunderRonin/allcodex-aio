@@ -4,11 +4,12 @@ Canonical instructions live in **[AGENTS.md](./AGENTS.md)** at the workspace roo
 
 ## Service-Specific Context
 For deep dives into individual services, refer to:
-- **Core**: [allcodex-core/CLAUDE.md](./allcodex-core/README.md)
+- **Core**: [allcodex-core/README.md](./allcodex-core/README.md)
 - **AllKnower**: [allknower/README.md](./allknower/README.md)
 - **Portal**: [allcodex-portal/README.md](./allcodex-portal/README.md)
 
 ## Quick Reference Commands
+
 | Service | Tool | Command |
 |---|---|---|
 | **Core** | pnpm | `pnpm server:start`, `pnpm test:sequential` |

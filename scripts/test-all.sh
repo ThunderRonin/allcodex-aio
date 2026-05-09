@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # test-all.sh - Full stack orchestration and test runner for AllCodex
 # Usage: ./scripts/test-all.sh [--prep] [playwright-args...]
@@ -104,5 +105,8 @@ cd allcodex-portal
 bun run test:e2e "${@}"
 EXIT_CODE=$?
 cd ..
+
+# Final cleanup via trap EXIT
+ 1
 
 # Final cleanup via trap EXIT

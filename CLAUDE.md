@@ -56,14 +56,14 @@ No root-level build or test command spans all submodules — run commands from w
 Full details: [docs/shared/reference/architecture.md](docs/shared/reference/architecture.md) and [AGENTS.md](AGENTS.md).
 
 **One-line flow:**
-```
+```text
 User → Portal (:3000) → AllKnower (:3001) → AllCodex Core (:8080, via ETAPI)
                        → AllCodex Core (direct ETAPI for note CRUD)
 ```
 
 - AllCodex Core never calls AllKnower — communication is one-directional.
 - Portal proxies **all** backend calls through Next.js API routes; the browser never holds ETAPI tokens or AllKnower Bearer tokens.
-- Credentials live in HTTP-only cookies, resolved by `allcodex-portal/lib/get-creds.ts`.
+- Core credentials are persisted in per-user backend storage within AllKnower, securely resolved during backend calls.
 - AllCodex Core's primary data layer is **Becca** — an in-memory cache of all notes loaded at startup. All reads come from Becca, all writes go to both SQLite and Becca.
 - AllKnower uses **LanceDB** (in-process, on-disk) for 4096-dim vector embeddings and **PostgreSQL** (via Prisma) for persistent state.
 

@@ -21,6 +21,10 @@ if tmux has-session -t $SESSION_NAME 2>/dev/null; then
     exit 0
 fi
 
+# Resolve and change to repository root
+ROOT_DIR="$(git rev-parse --show-toplevel 2>/dev/null || echo "$PWD")"
+cd "$ROOT_DIR" || { echo "Failed to cd to root"; exit 1; }
+
 # Create new detached session with the first window named "Ecosystem"
 tmux new-session -d -s $SESSION_NAME -n "Ecosystem"
 
@@ -31,13 +35,13 @@ tmux send-keys -t $SESSION_NAME:0.0 "echo 'Building and starting Core...' && cd 
 tmux split-window -h -t $SESSION_NAME:0.0
 
 # Pane 1 (Right-Top): allknower (Second)
-tmux send-keys -t $SESSION_NAME:0.1 "echo 'Waiting for Core (8080) before building AI...' && while ! curl -s http://127.0.0.1:8080 >/dev/null; do sleep 1; done && echo 'Core is up!' && cd allknower && bun run build && bun run start" C-m
+tmux send-keys -t $SESSION_NAME:0.1 "echo 'Waiting for Core (8080) before building AI...' && T=0 && while ! curl -s http://127.0.0.1:8080 >/dev/null; do if [ \$T -gt 60 ]; then echo 'Timeout waiting for Core' && exit 1; fi; sleep 1; T=\$((T+1)); done && echo 'Core is up!' && cd allknower && bun run build && bun run start" C-m
 
 # Split Pane 1 vertically (create Pane 2 on the Right-Bottom)
 tmux split-window -v -t $SESSION_NAME:0.1
 
 # Pane 2 (Right-Bottom): allcodex-portal (Third)
-tmux send-keys -t $SESSION_NAME:0.2 "echo 'Waiting for Knower (3001) before building Portal...' && while ! curl -s http://127.0.0.1:3001 >/dev/null; do sleep 1; done && echo 'Knower is up!' && cd allcodex-portal && bun run build && bun run start" C-m
+tmux send-keys -t $SESSION_NAME:0.2 "echo 'Waiting for Knower (3001) before building Portal...' && T=0 && while ! curl -s http://127.0.0.1:3001 >/dev/null; do if [ \$T -gt 60 ]; then echo 'Timeout waiting for Knower' && exit 1; fi; sleep 1; T=\$((T+1)); done && echo 'Knower is up!' && cd allcodex-portal && bun run build && bun run start" C-m
 
 # Resize layout cleanly (Core gets 50% left, the other two split the right side)
 tmux select-layout -t $SESSION_NAME:0 main-vertical

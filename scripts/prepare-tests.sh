@@ -20,14 +20,16 @@ echo "--- [allknower] ---"
 if command -v bun &> /dev/null; then
   (cd allknower && bun install && bun db:generate)
 else
-  echo "⚠️  bun not found. This is required for Knower."
+  echo "❌ bun not found. This is required for Knower."
+  exit 1
 fi
 
 echo "--- [allcodex-portal] ---"
 if command -v bun &> /dev/null; then
   (cd allcodex-portal && bun install)
 else
-  echo "⚠️  bun not found. This is required for Portal."
+  echo "❌ bun not found. This is required for Portal."
+  exit 1
 fi
 
 # 2. Environment Configuration

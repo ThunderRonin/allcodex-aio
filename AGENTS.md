@@ -143,4 +143,3 @@ See [docs/shared/reference/architecture.md](docs/shared/reference/architecture.m
 7. **Portal tests are split**: `allcodex-portal` has Vitest unit tests and Playwright E2E specs. `bun run check` runs typecheck + unit tests and intentionally excludes Playwright, which needs the full stack running.
 8. **HTML in portal**: lore detail view HTML is sanitized via `sanitizeLoreHtml()` (DOMPurify). Player-safe previews use `sanitizePlayerView()`. Keep this pattern when adding new HTML rendering paths.
 9. **Dev/Debug Data Reset**: Do not manually drop DB tables. Use the "Wipe DB Lore & RAG" route in Portal Settings to safely clear LanceDB, `#lore` notes, and Prisma tracking metadata (`RagIndexMeta`, `LlmCallLog`, `BrainDumpHistory`, etc.).
-ng new HTML rendering paths.

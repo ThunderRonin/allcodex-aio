@@ -5,7 +5,7 @@ description: Use when verifying the full monorepo typechecks and unit tests pass
 
 # Check All
 
-Runs typecheck + tests across all three services. Run from `/Users/allmaker/projects/allcodex-aio`.
+Runs typecheck + tests across all three services. Run from the repository root.
 
 ## Quick One-Liner
 
