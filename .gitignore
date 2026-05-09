@@ -10,3 +10,6 @@
 core.log
 knower.log
 /tmp/
+
+# Playwright CLI artifacts
+.playwright-cli/
