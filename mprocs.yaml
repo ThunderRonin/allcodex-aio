@@ -1,6 +1,6 @@
 procs:
   core:
-    shell: "cd allcodex-core && pnpm server:start"
+    shell: "cd allcodex-core && . \"$HOME/.nvm/nvm.sh\" && nvm use 22 && PATH=\"$(nvm which 22 | xargs dirname):$PATH\" pnpm server:start"
   knower:
     shell: "echo 'Waiting for Core (8080) to initialize...'; T=0; while ! curl -s http://127.0.0.1:8080 >/dev/null; do if [ $T -gt 60 ]; then echo 'Timeout waiting for Core'; exit 1; fi; sleep 1; T=$((T+1)); done; echo 'Core is up! Starting Knower...'; cd allknower && bun dev"
   portal:

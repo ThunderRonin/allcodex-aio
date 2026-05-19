@@ -140,6 +140,10 @@ See [docs/shared/reference/architecture.md](docs/shared/reference/architecture.m
 4. **ESLint ignores `packages/*`**: root lint config doesn't cover all package folders.
 5. **Brain dump overwrites**: AllKnower's brain-dump pipeline replaces note content wholesale — no merge/diff.
 6. **Docs drift**: some README endpoints, shared docs model references, and test expectations are stale vs. current code.
-7. **Portal tests are split**: `allcodex-portal` has Vitest unit tests and Playwright E2E specs. `bun run check` runs typecheck + unit tests and intentionally excludes Playwright, which needs the full stack running.
+7. **Portal tests are split**: `allcodex-portal` has Vitest unit tests and Playwright E2E specs. `bun run check` runs typecheck + unit tests and intentionally excludes Playwright, which needs the full stack running. A separate `integration` Playwright project (`tests/integration/*.spec.ts`) runs against real LLMs — see `allcodex-portal/CLAUDE.md`.
 8. **HTML in portal**: lore detail view HTML is sanitized via `sanitizeLoreHtml()` (DOMPurify). Player-safe previews use `sanitizePlayerView()`. Keep this pattern when adding new HTML rendering paths.
 9. **Dev/Debug Data Reset**: Do not manually drop DB tables. Use the "Wipe DB Lore & RAG" route in Portal Settings to safely clear LanceDB, `#lore` notes, and Prisma tracking metadata (`RagIndexMeta`, `LlmCallLog`, `BrainDumpHistory`, etc.).
+10. **Bun mock.module() completeness**: every `mock.module()` in AllKnower tests must export the full surface area of the real module. Missing exports cascade as `SyntaxError` in downstream test files. See `allknower/CLAUDE.md` for details.
+11. **Do not import source code across services.** Cross-service contracts go through ETAPI, HTTP schemas, and explicit client libraries.
+12. **Submodule commits**: commit inside the submodule first, then update the parent repo's submodule reference.
+13. **Portal Zod schemas must match AllKnower**: when updating `allcodex-portal/lib/allknower-schemas.ts`, cross-reference `allknower/src/pipeline/schemas/response-schemas.ts`.

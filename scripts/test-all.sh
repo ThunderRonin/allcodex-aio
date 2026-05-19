@@ -62,9 +62,9 @@ else
   echo -e "${YELLOW}Starting AllCodex Core in background...${NC}"
   # Source nvm inside the subshell so the .nvmrc (Node 22) is respected
   if [ -n "$NVM_SH" ]; then
-    (cd allcodex-core && source "$NVM_SH" && nvm use > /dev/null 2>&1 && pnpm server:start > ../logs/core-test.log 2>&1) &
+    (cd allcodex-core || exit 1; source "$NVM_SH" && nvm use > /dev/null 2>&1 && pnpm server:start > ../logs/core-test.log 2>&1) &
   else
-    (cd allcodex-core && pnpm server:start > ../logs/core-test.log 2>&1) &
+    (cd allcodex-core || exit 1; pnpm server:start > ../logs/core-test.log 2>&1) &
   fi
   CORE_PID=$!
 fi
@@ -76,9 +76,9 @@ if nc -z localhost 3001; then
 else
   echo -e "${YELLOW}Starting AllKnower (test mode) in background...${NC}"
   if [ -f "allknower/.env.test" ]; then
-    (cd allknower && bun --env-file=.env.test dev > ../logs/knower-test.log 2>&1) &
+    (cd allknower || exit 1; bun --env-file=.env.test dev > ../logs/knower-test.log 2>&1) &
   else
-    (cd allknower && bun dev > ../logs/knower-test.log 2>&1) &
+    (cd allknower || exit 1; bun dev > ../logs/knower-test.log 2>&1) &
   fi
   KNOWER_PID=$!
 fi
@@ -100,13 +100,10 @@ done
 
 # 5. Run Playwright
 echo -e "${YELLOW}Running Playwright tests...${NC}"
-cd allcodex-portal
+cd allcodex-portal || exit 1
 # Pass all remaining arguments to playwright
 bun run test:e2e "${@}"
 EXIT_CODE=$?
-cd ..
-
-# Final cleanup via trap EXIT
- 1
+cd .. || exit 1
 
 # Final cleanup via trap EXIT
