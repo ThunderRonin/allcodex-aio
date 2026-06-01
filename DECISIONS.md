@@ -56,6 +56,6 @@ AllKnower serves no login HTML. better-auth is configured in headless mode — t
 **Trade-off:** Each `bun test <dir>` call spawns a fresh process, so total wall-clock time is slightly higher. Suite isolation is worth it — combining directories causes intermittent, order-dependent failures that are hard to diagnose.
 
 ## Next.js App Router with React Compiler
-The Portal uses the Next.js App Router (not Pages Router) with React 19 and the experimental React Compiler enabled.
+The Portal uses the Next.js App Router (not Pages Router) with React 19 and the React Compiler enabled.
 **Why:** App Router enables React Server Components for data-fetching layouts. React Compiler automates memoization — no manual `useMemo`/`useCallback` discipline required.
 **Trade-off:** App Router patterns (server/client component boundary, `use client` directives) are stricter and less documented than Pages Router. Some libraries haven't fully adapted.
