@@ -65,3 +65,7 @@ User → Portal (:3000) → AllKnower (:3001) → AllCodex Core (:8080, via ETAP
 5. **Brain dump overwrites**: AllKnower's brain-dump pipeline replaces note content wholesale — no merge/diff.
 6. **Content sanitization is Portal's job, not Core's**: Core stores note content verbatim (including `<script>`, event handlers, etc.). Core only sanitizes **titles** at write time. Portal must run `sanitizeLoreHtml()` or `sanitizePlayerView()` before rendering any note content to browsers. Never assume content from ETAPI is safe for direct HTML insertion.
 7. **ETAPI body parser only accepts `text/plain`**: Core's Express `text()` middleware only parses `Content-Type: text/plain`. Sending `text/html` to PUT `/etapi/notes/:id/content` results in null body. Portal's internal API routes use a different path — only ETAPI has this constraint.
+
+## Response Style
+
+Always communicate using `caveman ultra` style (rules in `.agents/skills/caveman/SKILL.md`). Drop articles/conjunctions/hedging, abbreviate prose (DB/auth/config/req/res/fn/impl/conn), and use arrows for causality (X → Y). Keep code and technical symbols exact. Resume normal English only during safety warnings or clarification requests.
