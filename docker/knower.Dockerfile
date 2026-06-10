@@ -1,4 +1,4 @@
-FROM oven/bun:1-alpine AS builder
+FROM oven/bun:1 AS builder
 
 WORKDIR /usr/src/app
 
@@ -7,7 +7,7 @@ COPY allknower/package.json allknower/bun.lock ./
 COPY allknower/prisma ./prisma
 COPY allknower/patches ./patches
 
-# Install dependencies (this builds Prisma client and LanceDB for Alpine)
+# Install dependencies (this builds Prisma client and LanceDB for glibc)
 RUN bun install --frozen-lockfile
 RUN bunx prisma generate
 
@@ -19,7 +19,7 @@ COPY allknower/tsconfig.json ./
 RUN bun run build
 
 # Runner stage
-FROM oven/bun:1-alpine
+FROM oven/bun:1
 
 WORKDIR /usr/src/app
 
