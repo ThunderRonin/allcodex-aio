@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  core:
+    image: ghcr.io/thunderronin/allcodex-core:dev
+    build:
+      context: .
+      dockerfile: docker/core.Dockerfile
+    container_name: allcodex-core
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - TRILIUM_DATA_DIR=/srv/allcodex/core-data
+      - USER_UID=999
+      - USER_GID=988
+    env_file:
+      - /etc/allcodex/core.env
+    volumes:
+      - /srv/allcodex:/srv/allcodex
+
+  knower:
+    image: ghcr.io/thunderronin/allknower:dev
+    build:
+      context: .
+      dockerfile: docker/knower.Dockerfile
+    container_name: allknower
+    restart: unless-stopped
+    network_mode: host
+    env_file:
+      - /etc/allcodex/allknower.env
+    volumes:
+      - /srv/allcodex:/srv/allcodex
+
+  portal:
+    image: ghcr.io/thunderronin/allcodex-portal:dev
+    build:
+      context: .
+      dockerfile: docker/portal.Dockerfile
+    container_name: allcodex-portal
+    restart: unless-stopped
+    network_mode: host
+    env_file:
+      - /etc/allcodex/portal.env
