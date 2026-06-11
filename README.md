@@ -8,6 +8,10 @@
   A self-hosted worldbuilding platform for writers, game masters, and world builders. Three services work together: a lore database, an AI orchestrator, and a web portal.
 </p>
 
+<p align="center">
+  <a href="https://docs.allcodex.allmaker.dev"><strong>Explore the Live Documentation »</strong></a>
+</p>
+
 ```
 User → Portal (:3000) → AllKnower (:3001) → AllCodex Core (:8080)
                        → AllCodex Core (direct ETAPI for note CRUD)
@@ -129,6 +133,10 @@ Core stores note content **verbatim** (including scripts, event handlers, etc.).
 For the full architecture breakdown with data flows, internals, and Mermaid diagrams, see [`docs/shared/reference/architecture.md`](docs/shared/reference/architecture.md).
 
 ## Documentation
+
+The official user guides, API specifications, and self-hosting configurations are hosted live at **[docs.allcodex.allmaker.dev](https://docs.allcodex.allmaker.dev)**.
+
+### Repository Reference Files
 
 | Doc | Purpose |
 |---|---|
