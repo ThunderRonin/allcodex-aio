@@ -1,4 +1,4 @@
-# AllCodex AIO
+# <img src="logo/grimoire.svg" width="48" height="48" align="center" style="margin-right: 12px;" /> AllCodex AIO
 
 A self-hosted worldbuilding platform for writers, game masters, and world builders. Three services work together: a lore database, an AI orchestrator, and a web portal.
 
