@@ -1,6 +1,12 @@
-# <img src="logo/grimoire.png" width="48" height="48" align="center" style="margin-right: 12px;" /> AllCodex AIO
+<p align="center">
+  <img src="logo/grimoire.png" width="150" height="150" alt="AllCodex Grimoire Logo" />
+</p>
 
-A self-hosted worldbuilding platform for writers, game masters, and world builders. Three services work together: a lore database, an AI orchestrator, and a web portal.
+<h1 align="center">AllCodex AIO</h1>
+
+<p align="center">
+  A self-hosted worldbuilding platform for writers, game masters, and world builders. Three services work together: a lore database, an AI orchestrator, and a web portal.
+</p>
 
 ```
 User → Portal (:3000) → AllKnower (:3001) → AllCodex Core (:8080)
