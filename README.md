@@ -23,10 +23,10 @@ The browser only talks to the Portal. Backend tokens never reach the client.
 
 | Directory | Stack | Port | Role |
 |---|---|---|---|
-| [`allcodex-core/`](allcodex-core/) | Express 5, SQLite, pnpm | 8080 | Lore database — stores notes, attributes, relations. Serves ETAPI and public share pages. Fork of [TriliumNext/Trilium](https://github.com/TriliumNext/Trilium). |
-| [`allknower/`](allknower/) | Elysia, Bun, Prisma/Postgres, LanceDB | 3001 | AI orchestrator — brain dump, RAG embeddings, consistency checks, relationship suggestions, article copilot, gap detection. |
-| [`allcodex-portal/`](allcodex-portal/) | Next.js 16, React 19, Bun, shadcn/ui | 3000 | Web frontend — the only user-facing surface. Proxies all backend calls through Next.js API routes. |
-| [`docs/shared/`](docs/shared/) | Markdown | — | Cross-repo documentation (git submodule, shared by all three services). |
+| [`allcodex-core/`](allcodex-core/) | Express 5, SQLite, pnpm | 8080 | Lore database. It stores notes, attributes, and relations. It also serves the ETAPI and public share pages. Fork of [TriliumNext/Trilium](https://github.com/TriliumNext/Trilium). |
+| [`allknower/`](allknower/) | Elysia, Bun, Prisma/Postgres, LanceDB | 3001 | AI orchestrator for brain dumps, RAG embeddings, consistency checks, relationship suggestions, article copilots, and gap detection. |
+| [`allcodex-portal/`](allcodex-portal/) | Next.js 16, React 19, Bun, shadcn/ui | 3000 | Web frontend. This is the only user-facing surface, and it proxies all backend calls through Next.js API routes. |
+| [`docs/shared/`](docs/shared/) | Markdown | None | Cross-repo documentation in a git submodule shared by all three services. |
 
 Each service has its own README with setup instructions, features, and configuration details.
 
@@ -34,7 +34,7 @@ Each service has its own README with setup instructions, features, and configura
 
 ### Prerequisites
 
-- **Node.js 22.x** (Core requires it — Node 26 breaks better-sqlite3)
+- **Node.js 22.x** (Core requires Node 22 because Node 26 breaks better-sqlite3)
 - **Bun** (AllKnower and Portal)
 - **pnpm 10+** (Core only)
 - **PostgreSQL** (AllKnower's Prisma database)
@@ -74,7 +74,7 @@ bun install
 bun dev                    # http://localhost:3000
 ```
 
-Open the Portal, go to Settings, and connect to AllCodex Core (ETAPI token) and AllKnower (sign in or bearer token). Credentials are stored as HTTP-only cookies.
+Open the Portal, go to Settings, and connect to AllCodex Core (ETAPI token) and AllKnower (sign in or bearer token). The portal stores credentials in HTTP-only cookies.
 
 ### All three at once (mprocs)
 
@@ -85,7 +85,7 @@ mprocs                     # uses mprocs.yaml to start all services
 
 ## Development
 
-Commands run inside each submodule — no root-level build or test command spans all services.
+Run commands inside each submodule. No root-level build or test command spans all services.
 
 | Service | Install | Dev | Test | Typecheck |
 |---|---|---|---|---|
@@ -119,16 +119,16 @@ git commit -m "chore: update allknower submodule pointer"
 
 ## Architecture
 
-Everything in AllCodex is a **note**. Notes have types (text, code, book, image, etc.), content, and metadata via **attributes** (labels and relations). Notes live in a multi-parent tree via **branches**.
+AllCodex models everything as a **note**. Notes have types (text, code, book, image, etc.), content, and metadata via **attributes** (labels and relations). Notes live in a multi-parent tree via **branches**.
 
-- **Becca** is the backend entity cache — all notes loaded in memory at startup. Reads from Becca, writes go to both SQLite and Becca.
+- **Becca** is the backend entity cache. It loads all notes into memory at startup. Reads query Becca, while writes update both SQLite and Becca.
 - **ETAPI** (`/etapi/`) is the REST API for all note operations. Token auth. OpenAPI spec at `/etapi/openapi.json`, interactive docs at `/docs` (Scalar).
-- **AllKnower** communicates with Core only via ETAPI — no shared imports across services.
-- **Portal** proxies every backend call through Next.js API routes — the browser never holds ETAPI tokens or AllKnower credentials.
+- **AllKnower** communicates with Core only via ETAPI. The services do not share imports.
+- **Portal** proxies all backend calls through Next.js API routes. The browser never holds ETAPI tokens or AllKnower credentials.
 
 ### Content sanitization
 
-Core stores note content **verbatim** (including scripts, event handlers, etc.). Core only sanitizes **titles** at write time. Content sanitization is Portal's responsibility — `sanitizeLoreHtml()` and `sanitizePlayerView()` must run before rendering any note content to browsers.
+Core stores note content verbatim, including scripts and event handlers. Core sanitizes only titles at write time. Portal handles content sanitization: you must run `sanitizeLoreHtml()` or `sanitizePlayerView()` before rendering any note content.
 
 For the full architecture breakdown with data flows, internals, and Mermaid diagrams, see [`docs/shared/reference/architecture.md`](docs/shared/reference/architecture.md).
 
@@ -141,10 +141,10 @@ The official user guides, API specifications, and self-hosting configurations ar
 | Doc | Purpose |
 |---|---|
 | [`docs/shared/reference/architecture.md`](docs/shared/reference/architecture.md) | Full ecosystem architecture, data flows, service internals |
-| [`docs/shared/reference/canonical-lore-schema.md`](docs/shared/reference/canonical-lore-schema.md) | 21 lore entity types — source of truth for AllKnower and Portal |
+| [`docs/shared/reference/canonical-lore-schema.md`](docs/shared/reference/canonical-lore-schema.md) | 21 lore entity types, which act as the source of truth for AllKnower and Portal |
 | [`docs/shared/reference/portal-api-reference.md`](docs/shared/reference/portal-api-reference.md) | Portal API route reference |
 | [`docs/shared/planning/`](docs/shared/planning/) | Roadmaps and release plans |
-| [`AGENTS.md`](AGENTS.md) | AI agent conventions — commands, key files, pitfalls |
+| [`AGENTS.md`](AGENTS.md) | AI agent conventions covering commands, key files, and pitfalls |
 | [`CLAUDE.md`](CLAUDE.md) | Claude Code cross-service guidance |
 
 Each service also has its own `CLAUDE.md` for stack-specific conventions.
