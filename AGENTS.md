@@ -147,3 +147,5 @@ See [docs/shared/reference/architecture.md](docs/shared/reference/architecture.m
 11. **Do not import source code across services.** Cross-service contracts go through ETAPI, HTTP schemas, and explicit client libraries.
 12. **Submodule commits**: commit inside the submodule first, then update the parent repo's submodule reference.
 13. **Portal Zod schemas must match AllKnower**: when updating `allcodex-portal/lib/allknower-schemas.ts`, cross-reference `allknower/src/pipeline/schemas/response-schemas.ts`.
+14. **Documentation Repository Target**: The Mintlify documentation repository is tracked as the `docs/shared` submodule (remote: `allcodex-docs`). Do not confuse it with the standalone `allcodex-mint-docs` repository clone. All public doc edits must be committed and pushed to `docs/shared`.
+15. **ASCII Diagram Alignment**: Renaming technical terms (e.g., replacing "AI Orchestrator" with "Semantic Graph Compiler") changes string lengths and breaks ASCII art border alignments. Always verify and recalculate box border characters in files like `introduction.mdx` and `architecture.mdx` after text edits.
