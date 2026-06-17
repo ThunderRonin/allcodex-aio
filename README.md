@@ -5,7 +5,7 @@
 <h1 align="center">AllCodex AIO</h1>
 
 <p align="center">
-  A self-hosted worldbuilding platform for writers, game masters, and world builders. Three services work together: a lore database, an AI orchestrator, and a web portal.
+  A self-hosted worldbuilding platform to keep your lore perfectly cross-referenced without ever manual-tagging a markdown file again. Three services work together: a lore database, a semantic graph compiler, and a web portal.
 </p>
 
 <p align="center">
@@ -24,7 +24,7 @@ The browser only talks to the Portal. Backend tokens never reach the client.
 | Directory | Stack | Port | Role |
 |---|---|---|---|
 | [`allcodex-core/`](allcodex-core/) | Express 5, SQLite, pnpm | 8080 | Lore database. It stores notes, attributes, and relations. It also serves the ETAPI and public share pages. Fork of [TriliumNext/Trilium](https://github.com/TriliumNext/Trilium). |
-| [`allknower/`](allknower/) | Elysia, Bun, Prisma/Postgres, LanceDB | 3001 | AI orchestrator for brain dumps, RAG embeddings, consistency checks, relationship suggestions, article copilots, and gap detection. |
+| [`allknower/`](allknower/) | Elysia, Bun, Prisma/Postgres, LanceDB | 3001 | Semantic Graph Compiler for brain dumps, RAG embeddings, consistency checks, relationship suggestions, article copilots, and gap detection. |
 | [`allcodex-portal/`](allcodex-portal/) | Next.js 16, React 19, Bun, shadcn/ui | 3000 | Web frontend. This is the only user-facing surface, and it proxies all backend calls through Next.js API routes. |
 | [`docs/shared/`](docs/shared/) | Markdown | None | Cross-repo documentation in a git submodule shared by all three services. |
 
